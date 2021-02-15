@@ -429,6 +429,9 @@ std::pair<u32, u32> CHW::GetSurfaceSize() const
     };
 }
 
+void CHW::BeginScene() { }
+void CHW::EndScene() { }
+
 void CHW::Present()
 {
     const bool bUseVSync = psDeviceFlags.is(rsFullscreen) &&
@@ -439,9 +442,9 @@ void CHW::Present()
     {
         const float fps = Device.GetStats().fFPS;
         if (fps < 30)
-            m_pSwapChain2->SetSourceSize(Device.dwWidth * 0.85f, Device.dwHeight * 0.85f);
+            m_pSwapChain2->SetSourceSize(UINT(Device.dwWidth * 0.85f), UINT(Device.dwHeight * 0.85f));
         else if (fps < 15)
-            m_pSwapChain2->SetSourceSize(Device.dwWidth * 0.7f, Device.dwHeight * 0.7f);
+            m_pSwapChain2->SetSourceSize(UINT(Device.dwWidth * 0.7f), UINT(Device.dwHeight * 0.7f));
     }
 #endif
     CurrentBackBuffer = (CurrentBackBuffer + 1) % BackBufferCount;

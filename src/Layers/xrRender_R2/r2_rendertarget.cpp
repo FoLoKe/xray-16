@@ -11,7 +11,7 @@
 #include "Layers/xrRender/blenders/blender_luminance.h"
 #include "Layers/xrRender/blenders/blender_ssao.h"
 
-#ifdef RENDER == R_R2 // XXX: merge old/new cascade blenders into one file
+#if RENDER == R_R2 // XXX: merge old/new cascade blenders into one file
 #include "Layers/xrRender/blenders/blender_light_direct_cascade.h"
 #endif
 
@@ -570,6 +570,8 @@ CRenderTarget::CRenderTarget()
         g_accum_spot.create(D3DFVF_XYZ, g_accum_spot_vb, g_accum_spot_ib);
     }
 
+    // SPOT VOLUMETRIC
+    if (RImplementation.o.advancedpp)
     {
         s_accum_volume.create("accum_volumetric", "lights" DELIMITER "lights_spot01");
         manually_assign_texture(s_accum_volume, "s_smap", smapTarget);

@@ -137,7 +137,10 @@ void CHOM::Load()
             m_pModel->serialize(fName);
         }
         else
+        {
+            Log("* Loading HOM cache...");
             m_pModel->deserialize(fName);
+        }
     }
 
     bEnabled = TRUE;

@@ -1053,7 +1053,7 @@ void CRender::init_cacades()
     float fBias = -0.0000025f;
     //	float size = MAP_SIZE_START;
     m_sun_cascades[0].reset_chain = true;
-    m_sun_cascades[0].size = 9;
+    m_sun_cascades[0].size = 20;
     m_sun_cascades[0].bias = m_sun_cascades[0].size * fBias;
 
     m_sun_cascades[1].size = 40;
@@ -1191,7 +1191,7 @@ void CRender::render_sun_cascade(u32 cascade_ind)
 
         float map_size = m_sun_cascades[cascade_ind].size;
         XRMatrixOrthoOffCenterLH(&mdir_Project, -map_size * 0.5f, map_size * 0.5f, -map_size * 0.5f,
-                                   map_size * 0.5f, 0.1, dist + /*sqrt(2)*/1.41421f * map_size);
+                                   map_size * 0.5f, 0.1f, dist + /*sqrt(2)*/1.41421f * map_size);
 
         //////////////////////////////////////////////////////////////////////////
 

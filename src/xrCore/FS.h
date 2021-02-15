@@ -120,7 +120,7 @@ public:
     virtual void flush() = 0;
 };
 
-class XRCORE_API CMemoryWriter : public IWriter
+class XRCORE_API CMemoryWriter final : public IWriter
 {
     u8* data;
     size_t position;
@@ -135,7 +135,8 @@ public:
         mem_size = 0;
         file_size = 0;
     }
-    virtual ~CMemoryWriter();
+
+    ~CMemoryWriter() override;
 
     // kernel
     void w(const void* ptr, size_t count) override;
@@ -192,7 +193,7 @@ class IReaderBase
 {
 public:
     IC IReaderBase() : m_last_pos(0) {}
-    virtual ~IReaderBase() {}
+    virtual ~IReaderBase() = default;
     IC implementation_type& impl() { return *(implementation_type*)this; }
     IC const implementation_type& impl() const { return *(implementation_type*)this; }
 
@@ -344,7 +345,8 @@ public:
         : data(nullptr), Pos(0),
           Size(0), iterpos(0) {}
 
-    virtual ~IReader() = default;
+    ~IReader() override = default;
+
     IC IReader(void* _data, size_t _size, size_t _iterpos = 0)
     {
         data = (char*)_data;
@@ -409,7 +411,7 @@ private:
     typedef IReaderBase<IReader> inherited;
 };
 
-class XRCORE_API CVirtualFileRW : public IReader
+class XRCORE_API CVirtualFileRW final : public IReader
 {
 private:
 #if defined(XR_PLATFORM_WINDOWS)
@@ -420,7 +422,7 @@ private:
 
 public:
     CVirtualFileRW(pcstr cFileName);
-    virtual ~CVirtualFileRW();
+    ~CVirtualFileRW() override;
 };
 
 #endif // fsH

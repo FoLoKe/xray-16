@@ -234,7 +234,7 @@ u32 dm_current_cache_line = 49; //dm_current_size+1+dm_current_size
 u32 dm_current_cache_size = 2401; //dm_current_cache_line*dm_current_cache_line
 float dm_current_fade = 47.5; //float(2*dm_current_size)-.5f;
 
-float ps_current_detail_density = 0.6;
+float ps_current_detail_density = 0.6f;
 float ps_current_detail_height = 1.f;
 
 xr_token ext_quality_token[] = {{"qt_off", 0}, {"qt_low", 1}, {"qt_medium", 2},
@@ -292,7 +292,7 @@ public:
         int val = *value;
         clamp(val, 1, 16);
 #if defined(USE_OGL)
-        // TODO: OGL: Implement aniso filtering.
+        // OGL: don't set aniso here because it will be updated after vid restart
 #elif !defined(USE_DX9)
         SSManager.SetMaxAnisotropy(val);
 #else
@@ -320,11 +320,9 @@ public:
         if (nullptr == HW.pDevice)
             return;
 
-#if defined(USE_OGL)
-        // TODO: OGL: Implement mipmap bias control.
-#elif !defined(USE_DX9)
+#if !defined(USE_DX9) && !defined(USE_OGL)
         SSManager.SetMipLODBias(*value);
-#else
+#elif defined(USE_DX9)
         for (u32 i = 0; i < HW.Caps.raster.dwStages; i++)
             CHK_DX(HW.pDevice->SetSamplerState(i, D3DSAMP_MIPMAPLODBIAS, *((u32*)value)));
 #endif

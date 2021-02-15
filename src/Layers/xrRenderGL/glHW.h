@@ -18,16 +18,19 @@ public:
 
     void SetPrimaryAttributes();
 
+    IRender::RenderContext GetCurrentContext() const;
     int  MakeContextCurrent(IRender::RenderContext context) const;
 
     static std::pair<u32, u32> GetSurfaceSize();
-
-    void UpdateViews();
-
-    void Present();
     DeviceState GetDeviceState() const;
 
+public:
+    void BeginScene();
+    void EndScene();
+    void Present();
+
 private:
+    void UpdateViews();
     bool ThisInstanceIsGlobal() const;
 
 public:

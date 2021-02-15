@@ -5,12 +5,30 @@
 //////////////////////////////////////////////////////////////////////////
 // tables to calculate view-frustum bounds in world space
 // note: D3D uses [0..1] range for Z
-static Fvector3 corners[8] = {
-    {-1, -1, 0.7}, {-1, -1, +1}, {-1, +1, +1}, {-1, +1, 0.7}, {+1, +1, +1}, {+1, +1, 0.7}, {+1, -1, +1}, {+1, -1, 0.7}};
-static u16 facetable[16][3] = {
-    {3, 2, 1}, {3, 1, 0}, {7, 6, 5}, {5, 6, 4}, {3, 5, 2}, {4, 2, 5}, {1, 6, 7}, {7, 0, 1},
-    {5, 3, 0}, {7, 5, 0},
-    {1, 4, 6}, {2, 4, 1},
+static Fvector3 corners[8] =
+{
+    { -1, -1, 0.7f }, { -1, -1, +1   },
+    { -1, +1, +1   }, { -1, +1, 0.7f },
+    { +1, +1, +1   }, { +1, +1, 0.7f },
+    { +1, -1, +1   }, { +1, -1, 0.7f }
+};
+
+static u16 facetable[16][3] =
+{
+    { 3, 2, 1 },
+    { 3, 1, 0 },
+    { 7, 6, 5 },
+    { 5, 6, 4 },
+    { 3, 5, 2 },
+    { 4, 2, 5 },
+    { 1, 6, 7 },
+    { 7, 0, 1 },
+
+    { 5, 3, 0 },
+    { 7, 5, 0 },
+
+    { 1, 4, 6 },
+    { 2, 4, 1 },
 };
 
 void CRenderTarget::accum_direct(u32 sub_phase)
@@ -174,7 +192,7 @@ void CRenderTarget::accum_direct(u32 sub_phase)
 
         // setup
         RCache.set_Element(s_accum_direct->E[sub_phase]);
-        RCache.set_c("Ldynamic_dir", L_dir.x, L_dir.y, L_dir.z, 0);
+        RCache.set_c("Ldynamic_dir", L_dir.x, L_dir.y, L_dir.z, 0.0f);
         RCache.set_c("Ldynamic_color", L_clr.x, L_clr.y, L_clr.z, L_spec);
         RCache.set_c("m_shadow", m_shadow);
         RCache.set_c("m_sunmask", m_clouds_shadow);
@@ -291,7 +309,7 @@ void CRenderTarget::accum_direct_cascade(u32 sub_phase, Fmatrix& xform, Fmatrix&
         Fvector dir = L_dir;
         dir.normalize().mul(-_sqrt(intensity + EPS));
         RCache.set_Element(s_accum_mask->E[SE_MASK_DIRECT]); // masker
-        RCache.set_c("Ldynamic_dir", dir.x, dir.y, dir.z, 0);
+        RCache.set_c("Ldynamic_dir", dir.x, dir.y, dir.z, 0.0f);
 
         //if (stencil>=1 && aref_pass) stencil = light_id
         RCache.set_ColorWriteEnable(FALSE);
@@ -424,7 +442,7 @@ void CRenderTarget::accum_direct_cascade(u32 sub_phase, Fmatrix& xform, Fmatrix&
         RCache.set_Element(s_accum_direct->E[sub_phase]);
 
         RCache.set_c("m_texgen", m_Texgen);
-        RCache.set_c("Ldynamic_dir", L_dir.x, L_dir.y, L_dir.z, 0.f);
+        RCache.set_c("Ldynamic_dir", L_dir.x, L_dir.y, L_dir.z, 0.0f);
         RCache.set_c("Ldynamic_color", L_clr.x, L_clr.y, L_clr.z, L_spec);
         RCache.set_c("m_shadow", m_shadow);
         RCache.set_c("m_sunmask", m_clouds_shadow);
@@ -434,11 +452,11 @@ void CRenderTarget::accum_direct_cascade(u32 sub_phase, Fmatrix& xform, Fmatrix&
         if (sub_phase == SE_SUN_FAR)
         {
             Fvector3 view_viewspace;
-            view_viewspace.set(0, 0, 1);
+            view_viewspace.set(0.0f, 0.0f, 1.0f);
 
             m_shadow.transform_dir(view_viewspace);
             Fvector4 view_projlightspace;
-            view_projlightspace.set(view_viewspace.x, view_viewspace.y, 0, 0);
+            view_projlightspace.set(view_viewspace.x, view_viewspace.y, 0.0f, 0.0f);
             view_projlightspace.normalize();
 
             RCache.set_c("view_shadow_proj", view_projlightspace);
@@ -821,7 +839,7 @@ void CRenderTarget::accum_direct_lum()
 void CRenderTarget::accum_direct_volumetric(u32 sub_phase, const u32 Offset, const Fmatrix& mShadow)
 {
     PIX_EVENT(accum_direct_volumetric);
-    
+
     if ((sub_phase != SE_SUN_NEAR) && (sub_phase != SE_SUN_MIDDLE) && (sub_phase != SE_SUN_FAR))
         return;
 
